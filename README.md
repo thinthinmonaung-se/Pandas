@@ -1,1 +1,1 @@
-This repository showcases projects developed using Python for RPA (Robotic Process Automation).
+This repository showcases projects developed using Python, Pandas, NumPy.
