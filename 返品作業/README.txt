@@ -2,7 +2,7 @@
 
 返品データ処理 - Excel自動化スクリプト
 
-このプロジェクトは、Python を使用して返品データを処理し、Excel ファイルのデータを整理・フィルタリング・集計するスクリプトです。
+このプロジェクトは、Python を使用して返品データを処理し、INTELLIGENCE_INDEED RPA での実行時間 20 分を 30 秒に短縮 しました。
 返品データ、売上仕入データ、大阪・福岡の返品データを読み込み、指定された条件に基づいてデータを処理・整形し、最終結果を Excel に書き込みます。
 
 主な機能 (Features)
@@ -28,8 +28,8 @@ openpyxl ライブラリ (pip install openpyxl)
 
 Returns Data Processing - Excel Automation Script
 
-This project is a Python script designed to process return data, organize, filter, and aggregate data in Excel files.
-It reads return data, sales and purchase data, and return data from Osaka and Fukuoka, processes and formats the data based on specified conditions, and writes the final results to an Excel file.
+This project was developed to process return data using Python, significantly reducing execution time from 20 minutes in INTELLIGENCE_INDEED RPA to just 30 seconds.
+It organizes, filters, and aggregates data in Excel files by reading return data, sales and purchase data, and return data from Osaka and Fukuoka. The script processes and formats the data based on specified conditions and writes the final results to an Excel file.
 
 Features
 ✅ Read return data: Extract return data from a specified Excel file.
