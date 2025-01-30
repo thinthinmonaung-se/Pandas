@@ -234,21 +234,24 @@ for i in range(2):
         
         # Calculate the sum of "不良数" for each "製造工場"
         data_df['不良数合計'] = data_df.groupby('製造工場')['不良数'].transform('sum')
-        data_df['ロスコスト'] = data_df.groupby('製造工場')['ロスコスト'].transform('sum')
+        data_df['ロスコスト合計'] = data_df.groupby('製造工場')['ロスコスト'].transform('sum')
         
         # Drop duplicates based on "製造工場" and keep the first occurrence
-        data_df_unique = data_df[['製造工場', '不良数合計', 'ロスコスト']].drop_duplicates()
+        data_df_unique = data_df[['製造工場', '不良数合計', 'ロスコスト合計']].drop_duplicates()
         
         # Sort by 不良数合計 and ロスコスト in descending order
-        data_df_unique = data_df_unique.sort_values(by=['不良数合計', 'ロスコスト'], ascending=False)
+        data_df_unique = data_df_unique.sort_values(by=['不良数合計'], ascending=False)
+        # Sorting only by 'ロスコスト合計'
+        data_unique = data_df_unique.sort_values(by=['ロスコスト合計'], ascending=False)
+        
         
         # Convert the grouped data to a list of lists
         p2_不良数 = data_df_unique[['製造工場', '不良数合計']].values.tolist()
-        p2_ロスコスト = data_df_unique[['製造工場', 'ロスコスト']].values.tolist()
+        p2_ロスコスト = data_unique[['製造工場', 'ロスコスト合計']].values.tolist()
         
         # Calculate the total sum for 不良数合計 and ロスコスト after dropping duplicates
         total_不良数 = data_df_unique['不良数合計'].sum()
-        total_ロスコスト = data_df_unique['ロスコスト'].sum() 
+        total_ロスコスト = data_unique['ロスコスト合計'].sum() 
         #@ 
         Excel.Cs_WriteContent(self, 返品表, "p_table2", {"column": "D", "lastColumn": "B", "lastRow": 1, "option": 3, "range": "A1:B1", "row": 2, "startColumn": "A", "startRow": 1, "type": 0}, p2_不良数, 1, skip_err=0, delay_before=0, delay_after=0) 
         d_end_row = Excel.Cs_GetLastEmptyCell(self, 返品表, "p_table2", "指定一列", "D", 1, var_ret=0, skip_err=0, delay_before=0, delay_after=0) 
@@ -257,4 +260,4 @@ for i in range(2):
         d1_end_row = Excel.Cs_GetLastEmptyCell(self, 返品表, "p_table2", "指定一列", "D", 1, var_ret=0, skip_err=0, delay_before=0, delay_after=0) 
         Excel.Cs_WriteRowV2(self, 返品表, "p_table2", d1_end_row + 1, "D", ["総計",str(total_ロスコスト)], 1, skip_err=0, delay_before=0, delay_after=0) 
     if (p_table_sheet == "p_table_rpa"): 
-        Excel.Cs_WriteContent(self, 返品表, "円グラフ_rpa", {"column": "A", "lastColumn": "B", "lastRow": 1, "option": 0, "range": "A1:B1", "row": 2, "startColumn": "A", "startRow": 1, "type": 0}, 円_data, 0, skip_err=0, delay_before=0, delay_after=0) 
+        Excel.Cs_WriteContent(self, 返品表, "円グラフ_rpa", {"column": "A", "lastColumn": "B", "lastRow": 1, "option": 3, "range": "A1:B1", "row": 2, "startColumn": "A", "startRow": 1, "type": 0}, 円_data, 0, skip_err=0, delay_before=0, delay_after=0) 
