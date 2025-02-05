@@ -67,26 +67,26 @@ df_without_706 = df[
 品質課題_sheet_names = ['品質課題', '品質課題_rpa']
 p_table_sheet_names = ['p_table_rpa', 'p_table1_rpa']
 df_names = [df_with_706, df_without_706]
+  
+@_折りたたみ"売上仕入実績表" 
+売上仕入実績表 = Excel.Cs_OpenV3(self, "C:\\Python Learning\\Work\\品質不良集計場所\\品質不良集計場所 - RPA用\\Obic7データ\\売上仕入実績表_(2024_8月).xlsx", 1, "MicrosoftExcel", 1, 1, "", "", 0, 0, var_ret=0, skip_err=0, delay_before=0, delay_after=0) 
+@_コードを挿入する "df作成" 
+import pandas as pd
+
+#Read the data from {i}月 sheet
+売上df = pd.read_excel(売上仕入実績表, sheet_name="Sheet1", header=0, dtype=str).fillna('')
+売上df.index = range(2, len(売上df) + 2)
+
+#Convert the DataFrame values to a list of lists
+売上 = 売上df.values.tolist() 
+@ 
+Excel.Cs_WriteContent(self, 返品表, "売上仕入実績表", {"column": "A", "lastColumn": "B", "lastRow": 1, "option": 3, "range": "A1:B1", "row": 2, "startColumn": "A", "startRow": 1, "type": 0}, 売上, 0, skip_err=0, delay_before=0, delay_after=0) 
+Excel.Cs_Close(self, 売上仕入実績表, 1, 0, skip_err=0, delay_before=0, delay_after=0) 
  
-#@ 
-# #@_折りたたみ"売上仕入実績表" 
-# 売上仕入実績表 = Excel.Cs_OpenV3(self, "C:\\Python Learning\\Work\\品質不良集計場所\\品質不良集計場所 - RPA用\\Obic7データ\\売上仕入実績表_(2024_8月).xlsx", 1, "MicrosoftExcel", 1, 1, "", "", 0, 0, var_ret=0, skip_err=0, delay_before=0, delay_after=0) 
-# #@_コードを挿入する "df作成" 
-# import pandas as pd
-# 
-# # Read the data from {i}月 sheet
-# 売上df = pd.read_excel(売上仕入実績表, sheet_name="Sheet1", header=0, dtype=str).fillna('')
-# 売上df.index = range(2, len(売上df) + 2)
-# 
-# # Convert the DataFrame values to a list of lists
-# 売上 = 売上df.values.tolist() 
-# #@ 
-# Excel.Cs_WriteContent(self, 返品表, "売上仕入実績表", {"column": "A", "lastColumn": "B", "lastRow": 1, "option": 3, "range": "A1:B1", "row": 2, "startColumn": "A", "startRow": 1, "type": 0}, 売上, 0, skip_err=0, delay_before=0, delay_after=0) 
-# Excel.Cs_Close(self, 売上仕入実績表, 1, 0, skip_err=0, delay_before=0, delay_after=0) 
-# #@ 
-#@_折りたたみ"OEMコード削除" 
+@_折りたたみ"OEMコード削除" 
 大阪表 = Excel.Cs_OpenV3(self, "C:\\Python Learning\\Work\\品質不良集計場所\\品質不良集計場所 - RPA用\\物流Gﾃﾞｰﾀ\\【大阪】返品2024年8月.xlsx", 1, "MicrosoftExcel", 1, 1, "", "", 0, 0, var_ret=0, skip_err=0, delay_before=0, delay_after=0) 
 福岡表 = Excel.Cs_OpenV3(self, "C:\\Python Learning\\Work\\品質不良集計場所\\品質不良集計場所 - RPA用\\物流Gﾃﾞｰﾀ\\【福岡】返品2024年8月 .xlsx", 1, "MicrosoftExcel", 1, 1, "", "", 0, 0, var_ret=0, skip_err=0, delay_before=0, delay_after=0) 
+
 #@_コードを挿入する "大阪&福岡_df作成" 
 import pandas as pd
 
