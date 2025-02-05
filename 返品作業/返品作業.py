@@ -1,11 +1,33 @@
 返品表 = Excel.Cs_OpenV3(self, "C:\\Python Learning\\Work\\品質不良集計場所\\品質不良集計場所 - RPA用\\返品8月(2024)　-　新マクロ.xlsm", 1, "MicrosoftExcel", 1, 1, "", "", 0, 0, var_ret=0, skip_err=0, delay_before=0, delay_after=1000) 
-月 = Time.GetDateV2(self, 17, var_ret=0, skip_err=0, delay_before=0, delay_after=0) 
-#@_コードを挿入する "月 to {i}月" 
+#@_コードを挿入する "年月" 
+import datetime
+
+# Get current month number (1 to 12)
+月 = datetime.datetime.now().month
+
+# Dictionary for month mapping
 month = {
-    1: "8月",  2: "8月", 3: "12月", 4: "1月", 5: "21月",
+    1: "8月",  2: "8月", 3: "12月", 4: "1月", 5: "2月",
     6: "3月",  7: "4月",  8: "5月",  9: "6月",  10: "7月",
     11: "8月", 12: "9月"
-} 
+}
+
+# Determine the search_year based on the mapping
+current_year = datetime.datetime.now().year
+if 月 in [1, 2, 3, 4, 5, 6]:  # Check if month is before the current month in the mapping
+    search_year = current_year
+else:
+    search_year = current_year - 1
+
+col_month = {
+    1: "K",  2: "I",  3: "Dec-24",  4: "B",  5: "C", 
+    6: "D",  7: "E",  8: "F",  9: "G",  10: "H", 
+    11: "I", 12: "J"
+}
+
+search_year = "2024_rpa"
+#total_数量 = 246
+ 
 #@ 
 #@_コードを挿入する "Main df 作成" 
 import pandas as pd
@@ -47,21 +69,21 @@ p_table_sheet_names = ['p_table_rpa', 'p_table1_rpa']
 df_names = [df_with_706, df_without_706]
  
 #@ 
-#@_折りたたみ"売上仕入実績表" 
-売上仕入実績表 = Excel.Cs_OpenV3(self, "C:\\Python Learning\\Work\\品質不良集計場所\\品質不良集計場所 - RPA用\\Obic7データ\\売上仕入実績表_(2024_8月).xlsx", 1, "MicrosoftExcel", 1, 1, "", "", 0, 0, var_ret=0, skip_err=0, delay_before=0, delay_after=0) 
-#@_コードを挿入する "df作成" 
-import pandas as pd
-
-# Read the data from {i}月 sheet
-売上df = pd.read_excel(売上仕入実績表, sheet_name="Sheet1", header=0, dtype=str).fillna('')
-売上df.index = range(2, len(売上df) + 2)
-
-# Convert the DataFrame values to a list of lists
-売上 = 売上df.values.tolist() 
-#@ 
-Excel.Cs_WriteContent(self, 返品表, "売上仕入実績表", {"column": "A", "lastColumn": "B", "lastRow": 1, "option": 3, "range": "A1:B1", "row": 2, "startColumn": "A", "startRow": 1, "type": 0}, 売上, 0, skip_err=0, delay_before=0, delay_after=0) 
-Excel.Cs_Close(self, 売上仕入実績表, 1, 0, skip_err=0, delay_before=0, delay_after=0) 
-#@ 
+# #@_折りたたみ"売上仕入実績表" 
+# 売上仕入実績表 = Excel.Cs_OpenV3(self, "C:\\Python Learning\\Work\\品質不良集計場所\\品質不良集計場所 - RPA用\\Obic7データ\\売上仕入実績表_(2024_8月).xlsx", 1, "MicrosoftExcel", 1, 1, "", "", 0, 0, var_ret=0, skip_err=0, delay_before=0, delay_after=0) 
+# #@_コードを挿入する "df作成" 
+# import pandas as pd
+# 
+# # Read the data from {i}月 sheet
+# 売上df = pd.read_excel(売上仕入実績表, sheet_name="Sheet1", header=0, dtype=str).fillna('')
+# 売上df.index = range(2, len(売上df) + 2)
+# 
+# # Convert the DataFrame values to a list of lists
+# 売上 = 売上df.values.tolist() 
+# #@ 
+# Excel.Cs_WriteContent(self, 返品表, "売上仕入実績表", {"column": "A", "lastColumn": "B", "lastRow": 1, "option": 3, "range": "A1:B1", "row": 2, "startColumn": "A", "startRow": 1, "type": 0}, 売上, 0, skip_err=0, delay_before=0, delay_after=0) 
+# Excel.Cs_Close(self, 売上仕入実績表, 1, 0, skip_err=0, delay_before=0, delay_after=0) 
+# #@ 
 #@_折りたたみ"OEMコード削除" 
 大阪表 = Excel.Cs_OpenV3(self, "C:\\Python Learning\\Work\\品質不良集計場所\\品質不良集計場所 - RPA用\\物流Gﾃﾞｰﾀ\\【大阪】返品2024年8月.xlsx", 1, "MicrosoftExcel", 1, 1, "", "", 0, 0, var_ret=0, skip_err=0, delay_before=0, delay_after=0) 
 福岡表 = Excel.Cs_OpenV3(self, "C:\\Python Learning\\Work\\品質不良集計場所\\品質不良集計場所 - RPA用\\物流Gﾃﾞｰﾀ\\【福岡】返品2024年8月 .xlsx", 1, "MicrosoftExcel", 1, 1, "", "", 0, 0, var_ret=0, skip_err=0, delay_before=0, delay_after=0) 
@@ -69,11 +91,10 @@ Excel.Cs_Close(self, 売上仕入実績表, 1, 0, skip_err=0, delay_before=0, de
 import pandas as pd
 
 # Read the data from {i}月 sheet
-oem_df = pd.read_excel(返品表, sheet_name="OEM", header=0, dtype=str).fillna('')
-oem_df.index = range(2, len(oem_df) + 2)
+oem_df = pd.read_excel(返品表, sheet_name="OEM", header=None, dtype=str).fillna('')
 
 # Rename the column
-oem_df = oem_df.rename(columns={'Unnamed: 3': '商品ｺｰﾄﾞ'})
+oem_df = oem_df.rename(columns={3: '商品ｺｰﾄﾞ'})
 
 # Read the data from {i}月　sheet
 大阪_df = pd.read_excel(大阪表, sheet_name=month[月], header=2, dtype=str).fillna('')
@@ -253,11 +274,115 @@ for i in range(2):
         total_不良数 = data_df_unique['不良数合計'].sum()
         total_ロスコスト = data_unique['ロスコスト合計'].sum() 
         #@ 
-        Excel.Cs_WriteContent(self, 返品表, "p_table2", {"column": "D", "lastColumn": "B", "lastRow": 1, "option": 3, "range": "A1:B1", "row": 2, "startColumn": "A", "startRow": 1, "type": 0}, p2_不良数, 1, skip_err=0, delay_before=0, delay_after=0) 
-        d_end_row = Excel.Cs_GetLastEmptyCell(self, 返品表, "p_table2", "指定一列", "D", 1, var_ret=0, skip_err=0, delay_before=0, delay_after=0) 
-        Excel.Cs_WriteRowV2(self, 返品表, "p_table2", d_end_row + 1, "D", ["総計",str(total_不良数)], 1, skip_err=0, delay_before=0, delay_after=0) 
-        Excel.Cs_WriteContent(self, 返品表, "p_table2", {"column": "D", "lastColumn": "B", "lastRow": 1, "option": 3, "range": "A1:B1", "row": 26, "startColumn": "A", "startRow": 1, "type": 0}, p2_ロスコスト, 1, skip_err=0, delay_before=0, delay_after=0) 
-        d1_end_row = Excel.Cs_GetLastEmptyCell(self, 返品表, "p_table2", "指定一列", "D", 1, var_ret=0, skip_err=0, delay_before=0, delay_after=0) 
-        Excel.Cs_WriteRowV2(self, 返品表, "p_table2", d1_end_row + 1, "D", ["総計",str(total_ロスコスト)], 1, skip_err=0, delay_before=0, delay_after=0) 
+        Excel.Cs_WriteContent(self, 返品表, "p_table2", {"column": "A", "lastColumn": "B", "lastRow": 1, "option": 3, "range": "A1:B1", "row": 2, "startColumn": "A", "startRow": 1, "type": 0}, p2_不良数, 1, skip_err=0, delay_before=0, delay_after=0) 
+        A_end_row = Excel.Cs_GetLastEmptyCell(self, 返品表, "p_table2", "指定一列", "A", 1, var_ret=0, skip_err=0, delay_before=0, delay_after=0) 
+        Excel.Cs_WriteRowV2(self, 返品表, "p_table2", A_end_row + 1, "A", ["総計",str(total_不良数)], 1, skip_err=0, delay_before=0, delay_after=0) 
+        Excel.Cs_WriteContent(self, 返品表, "p_table2", {"column": "A", "lastColumn": "B", "lastRow": 1, "option": 3, "range": "A1:B1", "row": 26, "startColumn": "A", "startRow": 1, "type": 0}, p2_ロスコスト, 1, skip_err=0, delay_before=0, delay_after=0) 
+        A1_end_row = Excel.Cs_GetLastEmptyCell(self, 返品表, "p_table2", "指定一列", "A", 1, var_ret=0, skip_err=0, delay_before=0, delay_after=0) 
+        Excel.Cs_WriteRowV2(self, 返品表, "p_table2", A1_end_row + 1, "A", ["総計",str(total_ロスコスト)], 1, skip_err=0, delay_before=0, delay_after=0) 
     if (p_table_sheet == "p_table_rpa"): 
         Excel.Cs_WriteContent(self, 返品表, "円グラフ_rpa", {"column": "A", "lastColumn": "B", "lastRow": 1, "option": 3, "range": "A1:B1", "row": 2, "startColumn": "A", "startRow": 1, "type": 0}, 円_data, 0, skip_err=0, delay_before=0, delay_after=0) 
+#@_折りたたみ"売上実績照会" 
+売上実績照会表 = Excel.Cs_OpenV3(self, "C:\\Python Learning\\Work\\品質不良集計場所\\品質不良集計場所 - RPA用\\Obic7データ\\売上実績照会_2024_8_主要仕入れ先.xlsx", 1, "MicrosoftExcel", 1, 1, "", "", 0, 0, var_ret=0, skip_err=0, delay_before=0, delay_after=0) 
+#@_コードを挿入する "売上実績照会" 
+import pandas as pd
+
+# Read the data from 売上実績照会表
+照会_df = pd.read_excel(売上実績照会表, sheet_name="Sheet1", header=0, dtype=str).fillna('')
+
+照会_list = 照会_df[['主要仕入先名', '総売上数', '総売上金額']].values.tolist()
+ 
+#@ 
+for cur_row,cur_loop in Excel.Loop(self, 3, 返品表, "円グラフ (工場別)", 5, 37, "J", "J", textvalue=0).items():
+     
+    for item in 照会_list: 
+        if (item[0] == cur_loop[0]): 
+            Excel.Cs_WriteCellV2(self, 返品表, "円グラフ (工場別)_rpa", "K", cur_row, item[1], 0, skip_err=0, delay_before=0, delay_after=0) 
+            Excel.Cs_WriteCellV2(self, 返品表, "円グラフ (工場別)_rpa", "L", cur_row, item[2], 0, skip_err=0, delay_before=0, delay_after=0) 
+Excel.Cs_Close(self, 売上実績照会表, 1, 0, skip_err=0, delay_before=0, delay_after=0) 
+#@ 
+#@_折りたたみ"OEM" 
+品質表 = Excel.Cs_OpenV3(self, "C:\\Python Learning\\Work\\品質不良集計場所\\品質不良集計場所 - RPA用\\品質ロボ見積用資料\\品質ロボ見積用資料\\品質報告\\品質不良率＆ロスコスト(2024）_8.xlsx", 1, "MicrosoftExcel", 1, 1, "", "", 0, 0, var_ret=0, skip_err=0, delay_before=0, delay_after=1000) 
+#@_コードを挿入する "売上仕入実績表" 
+import pandas as pd
+
+# Read the data from {i}月 sheet
+売上_df = pd.read_excel(返品表, sheet_name="売上仕入実績表", header=0, dtype=str).fillna('')
+
+# Convert columns to numeric, treating non-numeric values as 0
+売上_df["当月売上数量"] = pd.to_numeric(売上_df["当月売上数量"], errors='coerce').fillna(0)
+売上_df["当月売上金額"] = pd.to_numeric(売上_df["当月売上金額"], errors='coerce').fillna(0)
+
+# Calculate the totals
+total_qty = 売上_df["当月売上数量"].sum()
+total_amt = 売上_df["当月売上金額"].sum()
+ 
+#@ 
+#@_コードを挿入する "OEM" 
+import pandas as pd
+
+# Define column names
+column_names = ["B", "C", "D", "E", "F"]  
+
+OEM_df = pd.read_excel(返品表, sheet_name="OEM", header=None, names=column_names, dtype={'E': int, 'F': int})
+
+# Fill missing values in column B
+OEM_df["B"] = OEM_df["B"].fillna(method='ffill')
+
+# Define groups to merge
+merge_groups = {
+    "エディオンOEM・ヤマダOEM": ["エディオンOEM", "ヤマダOEM"],
+    "その他　OEM・カタログハウスOEM": ["その他　OEM", "カタログハウスOEM"]
+}
+
+# Merge values for defined groups
+merged_rows = []
+for new_name, old_names in merge_groups.items():
+    merged_E = OEM_df.loc[OEM_df['B'].isin(old_names), 'E'].sum()
+    merged_F = OEM_df.loc[OEM_df['B'].isin(old_names), 'F'].sum()
+    merged_rows.append({'B': new_name, 'E': merged_E, 'F': merged_F})
+
+# Remove merged rows from original DataFrame
+OEM_df = OEM_df[~OEM_df['B'].isin(sum(merge_groups.values(), []))]
+
+# Append merged rows to the DataFrame
+OEM_df = pd.concat([OEM_df, pd.DataFrame(merged_rows)], ignore_index=True)
+
+# Group by column B and sum values in E and F
+OEM_df = OEM_df.groupby("B", as_index=False)[["E", "F"]].sum()
+
+# Define the custom order
+custom_order = [
+    'フジ医療OEM', 
+    'エディオンOEM・ヤマダOEM', 
+    'FFLなど', 
+    'フランスベッド\nOEM', 
+    'ニトリOEM', 
+    'ピップOEM', 
+    'その他　OEM・カタログハウスOEM'
+]
+
+# Sort based on custom order
+OEM_df['B'] = pd.Categorical(OEM_df['B'], categories=custom_order, ordered=True)
+OEM_df = OEM_df.sort_values('B').reset_index(drop=True)
+
+OEM_df.round({"F":-3})
+
+OEM_df["F"] = OEM_df["F"].map(lambda x : x /1000)
+OEM_df["F"] = OEM_df["F"].map(int)
+OEM_df["F"] = OEM_df["F"].map("{:,d}".format)
+
+# Convert DataFrame to list
+E_list = OEM_df["E"].tolist()
+F_list = OEM_df["F"].tolist()
+E_list = [[value] for value in E_list]
+F_list = [[value] for value in F_list] 
+#@ 
+Excel.Cs_WriteCellV2(self, 品質表, search_year, col_month[月], 3, str(total_数量), 0, skip_err=0, delay_before=0, delay_after=0) 
+Excel.Cs_WriteCellV2(self, 品質表, search_year, col_month[月], 4, str(total_qty), 0, skip_err=0, delay_before=0, delay_after=0) 
+金額 = Excel.Cs_ReadCell(self, 返品表, "p_table", "J", 1, 0, var_ret=0, skip_err=0, delay_before=0, delay_after=0) 
+Excel.Cs_WriteCellV2(self, 品質表, search_year, col_month[月], 16, 金額, 0, skip_err=0, delay_before=0, delay_after=0) 
+Excel.Cs_WriteCellV2(self, 品質表, search_year, col_month[月], 19, str(total_amt), 0, skip_err=0, delay_before=0, delay_after=0) 
+Excel.Cs_WriteContent(self, 品質表, search_year, {"column": col_month[月], "lastColumn": "B", "lastRow": 1, "option": 3, "range": "A1:B1", "row": 5, "startColumn": "A", "startRow": 1, "type": 0}, E_list, 0, skip_err=0, delay_before=0, delay_after=0) 
+Excel.Cs_WriteContent(self, 品質表, search_year, {"column": col_month[月], "lastColumn": "B", "lastRow": 1, "option": 3, "range": "A1:B1", "row": 20, "startColumn": "A", "startRow": 1, "type": 0}, F_list, 0, skip_err=0, delay_before=0, delay_after=0) 
+#@ 
