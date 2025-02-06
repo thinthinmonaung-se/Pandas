@@ -7,26 +7,23 @@ import datetime
 
 # Dictionary for month mapping
 month = {
-    1: "8月",  2: "8月", 3: "12月", 4: "1月", 5: "2月",
+    1: "10月",  2: "11月", 3: "12月", 4: "1月", 5: "2月",
     6: "3月",  7: "4月",  8: "5月",  9: "6月",  10: "7月",
     11: "8月", 12: "9月"
 }
 
 # Determine the search_year based on the mapping
 current_year = datetime.datetime.now().year
-if 月 in [1, 2, 3, 4, 5, 6]:  # Check if month is before the current month in the mapping
-    search_year = current_year
-else:
+if 月 in [1, 2, 3]:  
     search_year = current_year - 1
+else:
+    search_year = current_year
 
 col_month = {
     1: "K",  2: "I",  3: "Dec-24",  4: "B",  5: "C", 
     6: "D",  7: "E",  8: "F",  9: "G",  10: "H", 
     11: "I", 12: "J"
 }
-
-search_year = "2024_rpa"
-#total_数量 = 246
  
 #@ 
 #@_コードを挿入する "Main df 作成" 
